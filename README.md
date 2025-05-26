@@ -300,8 +300,8 @@ yet. Here are the steps to follow in addition to those described in the
 
 ## Architecture ##
 
-The bot has grown according to the needs for automation in the Coq
-project, initially as a single file, and is now incrementally being
+The bot has grown according to the needs for automation in the Rocq
+Prover, initially as a single file, and is now incrementally being
 rearchitected around the idea of providing a library of base bot
 components that can be used in a trigger-action programming model.
 
