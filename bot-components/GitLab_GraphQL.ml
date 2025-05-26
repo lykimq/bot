@@ -5,10 +5,12 @@ module GetRetriedJobs =
     project(fullPath: $fullPath) {
       job(id: $jobId) {
         pipeline {
-          jobs(retried: true, first: 100) {
-            count
-            nodes {
-              name
+          ... on Pipeline {
+            jobs(retried: true, first: 100) {
+              count
+              nodes {
+                name
+              }
             }
           }
         }
