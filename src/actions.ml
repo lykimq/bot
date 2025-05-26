@@ -258,6 +258,9 @@ let send_doc_url ~bot_info ~github_repo_full_name job_info =
   | "rocq-prover/rocq", ("doc:refman" | "doc:ci-refman") ->
       send_doc_url_job ~bot_info job_info "refman"
         "_build/default/doc/refman-html/index.html"
+  | "rocq-prover/rocq", "doc:init" ->
+      send_doc_url_job ~bot_info job_info "corelib"
+        "_build/default/doc/corelib/html/index.html"
   | ( "rocq-prover/rocq"
     , ( "doc:stdlib" (* only after complete switch to Dune *)
       | "doc:stdlib:dune" (* only before complete switch to Dune *) ) ) ->
