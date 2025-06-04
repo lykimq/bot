@@ -371,8 +371,8 @@ let callback _conn req body =
               { project_number= 11 (* Rocq's backporting project number *)
               ; pr_id
               ; field
-              ; old_value= "Request inclusion"
-              ; new_value= "Rejected" } )
+              ; old_value= Some "Request inclusion"
+              ; new_value= Some "Rejected" } )
         when String.is_suffix ~suffix:" status" field ->
           let backport_to = String.drop_suffix field 7 in
           (fun () ->

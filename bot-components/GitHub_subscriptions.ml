@@ -183,9 +183,17 @@ let github_action ~event ~action json =
            ; project_number= changes_json |> member "project_number" |> to_int
            ; field= changes_json |> member "field_name" |> to_string
            ; old_value=
-               changes_json |> member "from" |> member "name" |> to_string
+               ( match changes_json |> member "from" with
+               | `Null ->
+                   None
+               | from ->
+                   Some (from |> member "name" |> to_string) )
            ; new_value=
-               changes_json |> member "to" |> member "name" |> to_string } )
+               ( match changes_json |> member "to" with
+               | `Null ->
+                   None
+               | to_json ->
+                   Some (to_json |> member "name" |> to_string) ) } )
   | "issue_comment", "created" ->
       Ok (CommentCreated (comment_info_of_json json))
   | "pull_request_review", "submitted" ->

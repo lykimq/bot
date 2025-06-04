@@ -15,8 +15,8 @@ type pull_request_card_info =
   ; project_id: GitHub_ID.t
   ; project_number: int
   ; field: string
-  ; old_value: string
-  ; new_value: string }
+  ; old_value: string option
+  ; new_value: string option }
 
 type mv_card_to_column_input = {card_id: GitHub_ID.t; column_id: GitHub_ID.t}
 
