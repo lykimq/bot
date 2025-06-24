@@ -81,9 +81,15 @@ val remove_labels :
   -> issue:GitHub_ID.t
   -> unit Lwt.t
 
-val update_milestone :
+val update_milestone_issue :
      bot_info:Bot_info.t
   -> issue:GitHub_ID.t
+  -> milestone:GitHub_ID.t
+  -> unit Lwt.t
+
+val update_milestone_pull_request :
+     bot_info:Bot_info.t
+  -> pr_id:GitHub_ID.t
   -> milestone:GitHub_ID.t
   -> unit Lwt.t
 

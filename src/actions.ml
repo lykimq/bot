@@ -2814,7 +2814,7 @@ let project_action ~bot_info ~pr_id ~backport_to () =
           ~repo:"rocq" ~number:rejected_milestone
         >>= function
         | Ok milestone ->
-            GitHub_mutations.update_milestone ~bot_info ~issue:pr_id ~milestone
+            GitHub_mutations.update_milestone_pull_request ~bot_info ~pr_id ~milestone
             <&> ( GitHub_mutations.post_comment ~bot_info ~id:pr_id
                     ~message:
                       "This PR was postponed. Please update accordingly the \

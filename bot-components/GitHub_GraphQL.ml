@@ -498,11 +498,21 @@ module PostComment =
   }
 |}]
 
-module UpdateMilestone =
+module UpdateMilestoneIssue =
   [%graphql
   {|
   mutation updateMilestone($issue: ID!, $milestone: ID!) {
     updateIssue(input: {id: $issue, milestoneId: $milestone}) {
+      clientMutationId
+    }
+  }
+|}]
+
+module UpdateMilestonePullRequest =
+  [%graphql
+  {|
+  mutation updateMilestone($pr_id: ID!, $milestone: ID!) {
+    updatePullRequest(input: {pullRequestId: $pr_id, milestoneId: $milestone}) {
       clientMutationId
     }
   }

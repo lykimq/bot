@@ -90,10 +90,25 @@ let report_on_posting_comment = function
   | Error f ->
       Lwt_io.printf "Error while posting a comment: %s\n" f
 
-let update_milestone ~bot_info ~issue ~milestone =
-  let open GitHub_GraphQL.UpdateMilestone in
+let update_milestone_issue ~bot_info ~issue ~milestone =
+  let open GitHub_GraphQL.UpdateMilestoneIssue in
   makeVariables
     ~issue:(GitHub_ID.to_string issue)
+    ~milestone:(GitHub_ID.to_string milestone)
+    ()
+  |> serializeVariables |> variablesToJson
+  |> send_graphql_query ~bot_info ~query
+       ~parse:(Fn.compose parse unsafe_fromJson)
+  >>= function
+  | Ok _ ->
+      Lwt.return_unit
+  | Error err ->
+      Lwt_io.printlf "Error while updating milestone: %s" err
+
+let update_milestone_pull_request ~bot_info ~pr_id ~milestone =
+  let open GitHub_GraphQL.UpdateMilestonePullRequest in
+  makeVariables
+    ~pr_id:(GitHub_ID.to_string pr_id)
     ~milestone:(GitHub_ID.to_string milestone)
     ()
   |> serializeVariables |> variablesToJson
@@ -141,21 +156,21 @@ let merge_pull_request ~bot_info ?merge_method ?commit_headline ?commit_body
   | Error err ->
       Lwt_io.printlf "Error while merging PR: %s" err
 
-let reflect_pull_request_milestone ~bot_info issue_closer_info =
-  match issue_closer_info.closer.milestone_id with
+let reflect_pull_request_milestone ~bot_info pr_closer_info =
+  match pr_closer_info.closer.milestone_id with
   | None ->
       Lwt_io.printf "PR closed without a milestone: doing nothing.\n"
   | Some milestone -> (
-    match issue_closer_info.milestone_id with
+    match pr_closer_info.milestone_id with
     | None ->
         (* No previous milestone: setting the one of the PR which closed the issue *)
-        update_milestone ~bot_info ~issue:issue_closer_info.issue_id ~milestone
+        update_milestone_pull_request ~bot_info ~pr_id:pr_closer_info.issue_id ~milestone
     | Some previous_milestone when GitHub_ID.equal previous_milestone milestone
       ->
         Lwt_io.print "Issue is already in the right milestone: doing nothing.\n"
     | Some _ ->
-        update_milestone ~bot_info ~issue:issue_closer_info.issue_id ~milestone
-        <&> ( post_comment ~bot_info ~id:issue_closer_info.issue_id
+        update_milestone_pull_request ~bot_info ~pr_id:pr_closer_info.issue_id ~milestone
+        <&> ( post_comment ~bot_info ~id:pr_closer_info.issue_id
                 ~message:
                   "The milestone of this issue was changed to reflect the one \
                    of the pull request that closed it."
