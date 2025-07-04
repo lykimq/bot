@@ -592,6 +592,7 @@ type base_and_head_checks_info =
   ; base_checks: (check_tab_info * bool option, string * string) Result.t list
   ; head_checks: (check_tab_info * bool option, string * string) Result.t list
   ; draft: bool
+  ; body: string
   ; labels: string list }
 
 let get_base_and_head_checks ~bot_info ~owner ~repo ~pr_number ~base ~head =
@@ -758,6 +759,7 @@ let get_base_and_head_checks ~bot_info ~owner ~repo ~pr_number ~base ~head =
                         ; base_checks= completed_runs baseCheckRuns "base" base
                         ; head_checks= completed_runs headCheckRuns "head" head
                         ; draft= pull_request.isDraft
+                        ; body= pull_request.body
                         ; labels= Option.value ~default:[] labels } ) ) )
 
 let get_pipeline_summary ~bot_info ~owner ~repo ~head =

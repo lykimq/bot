@@ -380,6 +380,7 @@ query getChecks($appId: Int!, $owner: String!, $repo:String!, $prNumber: Int!, $
         }
       }
       isDraft
+      body
     }
     base: object(expression: $base) {
       ... on Commit {

@@ -94,6 +94,7 @@ type base_and_head_checks_info =
   ; base_checks: (check_tab_info * bool option, string * string) result list
   ; head_checks: (check_tab_info * bool option, string * string) result list
   ; draft: bool
+  ; body: string
   ; labels: string list }
 
 val get_base_and_head_checks :

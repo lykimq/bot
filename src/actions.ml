@@ -1021,6 +1021,7 @@ type ci_minimization_pr_info =
   ; head: string
   ; pr_number: int
   ; draft: bool
+  ; body: string
   ; labels: string list
   ; base_pipeline_finished: bool
   ; head_pipeline_finished: bool
@@ -1070,7 +1071,7 @@ let fetch_ci_minimization_info ~bot_info ~owner ~repo ~pr_number
             ( None
             , f "Error while looking for failed library tests to minimize: %s"
                 err )
-      | Ok {pr_id; base_checks; head_checks; draft; labels} -> (
+      | Ok {pr_id; base_checks; head_checks; draft; body; labels} -> (
           let partition_errors =
             List.partition_map ~f:(function
               | Error (name, error) ->
@@ -1169,6 +1170,7 @@ let fetch_ci_minimization_info ~bot_info ~owner ~repo ~pr_number
                   ; head
                   ; pr_number
                   ; draft
+                  ; body
                   ; labels
                   ; base_pipeline_finished
                   ; head_pipeline_finished
@@ -1298,6 +1300,10 @@ let suggest_ci_minimization_for_pr = function
       RunAutomatically
   | {labels} when List.exists ~f:(String.equal "kind: infrastructure") labels ->
       Silent "this PR is labeled with kind: infrastructure"
+  | {body} when String.is_substring ~substring:"offer-minimizer: off" body ->
+      Silent
+        "the PR body contains an 'offer-minimizer: off' directive, which turns \
+         off minimization suggestions"
   | {draft= true} ->
       Suggest
   | _ ->
@@ -2814,7 +2820,8 @@ let project_action ~bot_info ~pr_id ~backport_to () =
           ~repo:"rocq" ~number:rejected_milestone
         >>= function
         | Ok milestone ->
-            GitHub_mutations.update_milestone_pull_request ~bot_info ~pr_id ~milestone
+            GitHub_mutations.update_milestone_pull_request ~bot_info ~pr_id
+              ~milestone
             <&> ( GitHub_mutations.post_comment ~bot_info ~id:pr_id
                     ~message:
                       "This PR was postponed. Please update accordingly the \
