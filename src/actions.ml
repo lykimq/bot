@@ -1300,10 +1300,10 @@ let suggest_ci_minimization_for_pr = function
       RunAutomatically
   | {labels} when List.exists ~f:(String.equal "kind: infrastructure") labels ->
       Silent "this PR is labeled with kind: infrastructure"
-  | {body} when String.is_substring ~substring:"offer-minimizer: off" body ->
+  | {body} when not (String.is_substring ~substring:"offer-minimizer: on" body) ->
       Silent
-        "the PR body contains an 'offer-minimizer: off' directive, which turns \
-         off minimization suggestions"
+        "the PR body does not contain an 'offer-minimizer: on' directive, which turns \
+         on minimization suggestions"
   | {draft= true} ->
       Suggest
   | _ ->
