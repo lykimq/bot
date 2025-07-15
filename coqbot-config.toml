@@ -26,7 +26,7 @@ app_id="31373"
 
   [mappings.opam]
   github="rocq-prover/opam"
-  gitlab="coq/opam"
+  gitlab="coq/opam-repositories"
   gitlab_domain="gitlab.inria.fr"
 
   [mappings.math-comp]
