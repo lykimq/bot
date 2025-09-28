@@ -34,13 +34,19 @@ let get_retry_nb ~bot_info ~gitlab_domain ~full_name ~build_id ~build_name =
   |> send_graphql_query ~bot_info ~gitlab_domain ~query
        ~parse:(Fn.compose parse unsafe_fromJson)
   >|= function
-  | Ok {project= Some {job= Some {pipeline= Some `Pipeline {jobs= Some {count= 0}}}}} ->
+  | Ok
+      { project=
+          Some {job= Some {pipeline= Some (`Pipeline {jobs= Some {count= 0}})}}
+      } ->
       Ok 0
   | Ok
       { project=
           Some
-            {job= Some {pipeline= Some `Pipeline {jobs= Some {count; nodes= Some jobs}}}}
-      } ->
+            { job=
+                Some
+                  { pipeline=
+                      Some (`Pipeline {jobs= Some {count; nodes= Some jobs}}) }
+            } } ->
       if count > Array.length jobs then Error "Too many retried jobs"
       else
         Ok
@@ -49,10 +55,13 @@ let get_retry_nb ~bot_info ~gitlab_domain ~full_name ~build_id ~build_name =
                 String.equal build_name name
             | None | Some {name= None} ->
                 false ) )
-  | Ok {project= Some {job= Some {pipeline= Some `Pipeline {jobs= Some {nodes= None}}}}}
-    ->
+  | Ok
+      { project=
+          Some
+            {job= Some {pipeline= Some (`Pipeline {jobs= Some {nodes= None}})}}
+      } ->
       Error "There are retried jobs but we failed to get them"
-  | Ok {project= Some {job= Some {pipeline= Some `Pipeline {jobs= None}}}} ->
+  | Ok {project= Some {job= Some {pipeline= Some (`Pipeline {jobs= None})}}} ->
       Error "Could not get the number of retried jobs"
   | Ok {project= Some {job= Some {pipeline= Some _}}} ->
       Error "Did not get the full information about the pipeline"

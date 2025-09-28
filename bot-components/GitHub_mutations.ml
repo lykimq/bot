@@ -164,12 +164,14 @@ let reflect_pull_request_milestone ~bot_info pr_closer_info =
     match pr_closer_info.milestone_id with
     | None ->
         (* No previous milestone: setting the one of the PR which closed the issue *)
-        update_milestone_pull_request ~bot_info ~pr_id:pr_closer_info.issue_id ~milestone
+        update_milestone_pull_request ~bot_info ~pr_id:pr_closer_info.issue_id
+          ~milestone
     | Some previous_milestone when GitHub_ID.equal previous_milestone milestone
       ->
         Lwt_io.print "Issue is already in the right milestone: doing nothing.\n"
     | Some _ ->
-        update_milestone_pull_request ~bot_info ~pr_id:pr_closer_info.issue_id ~milestone
+        update_milestone_pull_request ~bot_info ~pr_id:pr_closer_info.issue_id
+          ~milestone
         <&> ( post_comment ~bot_info ~id:pr_closer_info.issue_id
                 ~message:
                   "The milestone of this issue was changed to reflect the one \
