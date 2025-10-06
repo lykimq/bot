@@ -15,3 +15,28 @@ version: "0.2.0"
 date-released: 2020-09-09
 url: "https://github.com/coq/bot"
 license: MIT
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Zimmermann"
+    given-names: "Théo"
+    orcid: "https://orcid.org/0000-0002-3580-8806"
+  - family-names: "Coolen"
+    given-names: "Julien"
+  - family-names: "Gross"
+    given-names: "Jason"
+    orcid: "https://orcid.org/0000-0002-9427-4891"
+  - family-names: "Pédrot"
+    given-names: "Pierre-Marie"
+    orcid: "https://orcid.org/0009-0002-8006-6239"
+  - family-names: "Gilbert"
+    given-names: "Gaëtan"
+    orcid: "https://orcid.org/0009-0008-0626-3078"
+  doi: "10.1109/MS.2022.3179773"
+  journal: "IEEE Software"
+  start: 32 # First page number
+  end: 37 # Last page number
+  title: "The Advantages of Maintaining a Multitask, Project-Specific Bot: An Experience Report"
+  issue: 5
+  volume: 39
+  year: 2022
