@@ -1,6 +1,6 @@
 # :warning: Critical Issues
 
-**Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Current Architecture](01-current-architecture.md) | [Next: Phase 0 Overview :arrow_right:](03-phase0-overview.md)
+**Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Current Architecture](01-current-architecture.md) | [Next: Phase 1 Overview :arrow_right:](03-phase0-overview.md)
 
 ---
 
@@ -28,6 +28,8 @@
 - `bot.ml` → Simplify to routing logic only
 - `helpers.ml` → Split into focused utility modules
 
+**Related Issues**: [#247](docs/issues/roadmap/templates/unlabeled/issue-157-parse-webhooks-for-github-app-installations.md)
+
 ## 2. :wrench: Hardcoded Repository Mappings
 
 **Problem**: Repository configurations are embedded in pattern matching throughout `bot.ml`:
@@ -46,6 +48,8 @@ match (owner, repo) with
 - Feature logic remains scattered across multiple pattern matches in `bot.ml`, making it difficult to manage and extend.
 - It's challenging to test different feature versions or deploy them gradually to specific repositories.
 
+**Related Issues**: [#157](docs/issues/roadmap/templates/unlabeled/issue-157-parse-webhooks-for-github-app-installations.md)
+
 ## 3. :traffic_light: No Rate Limiting
 
 **Problem**: GitHub API has 5000 requests/hour limit (per installation). Bot has no intelligent backoff strategy or rate limit tracking.
@@ -55,6 +59,8 @@ match (owner, repo) with
 - Failed requests aren't retried properly
 - No visibility into API quota usage
 - Bot may become unresponsive when rate-limited
+
+**Related Issues**: [#289](docs/issues/roadmap/detailed/issue-289-ci-retry-backoff.md), [#339](docs/issues/roadmap/detailed/issue-339-status-check-race.md)
 
 ## 4. :x: Unstructured Error Handling
 
@@ -66,6 +72,8 @@ match (owner, repo) with
 - No automated recovery mechanisms
 - Can't distinguish between temporary API failures and permanent errors
 
+**Related Issues**: [#264](docs/issues/roadmap/templates/enhancements/issue-264-better-error-messages-on-uncaught-exceptions.md), [#323](docs/issues/roadmap/detailed/issue-323-secret-masking.md), [#334](docs/issues/roadmap/detailed/issue-334-duplicate-closures.md)
+
 ## 5. :test_tube: Minimal Testing
 
 **Problem**: Currently no automated test suite. Testing requires running the full bot with Docker and ngrok.
@@ -76,6 +84,8 @@ match (owner, repo) with
 - Hard to catch regressions
 - Contributors need complex local setup to test changes
 
+**Related Issues**: [#170](docs/issues/roadmap/templates/bug-minimizer/issue-170-ci-minimization-responses-should-allow-easy-creation-of-prs-augmenting-the-test-suite.md)
+
 ---
 
-**Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Current Architecture](01-current-architecture.md) | [Next: Phase 0 Overview :arrow_right:](03-phase0-overview.md)
+**Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Current Architecture](01-current-architecture.md) | [Next: Phase 1 Overview :arrow_right:](03-phase0-overview.md)

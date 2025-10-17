@@ -14,9 +14,10 @@
 
 This improvement roadmap transforms the bot from a monolithic, difficult-to-maintain system into a modular, testable, and debuggable platform. The phased approach minimizes risk while delivering continuous value.
 
-**Two-Phase Strategy**:
-1. **Phase 0**: Establish critical foundations (rate limiting, errors, logging, config, testing)
-2. **Phase 1**: Break down monolithic files into feature modules
+**Three-Phase Strategy**:
+1. **Phase 0**: Address critical bugs and security vulnerabilities first
+2. **Phase 1**: Establish critical foundations (rate limiting, errors, logging, config, testing)
+3. **Phase 2**: Break down monolithic files into feature modules
 
 ---
 

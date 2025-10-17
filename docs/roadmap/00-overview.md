@@ -31,8 +31,9 @@ Transform the bot into a modular, testable, and maintainable system while preser
 ## Phases
 
 The improvement is divided into:
-- **Phase 0**: Critical Foundations (rate limiting, error handling, logging, configuration, testing)
-- **Phase 1**: Modularization (break down monolithic files into feature modules)
+- **Phase 0**: Open Issues (address critical bugs and security vulnerabilities first)
+- **Phase 1**: Critical Foundations (rate limiting, error handling, logging, configuration, testing)
+- **Phase 2**: Modularization (break down monolithic files into feature modules)
 
 ---
 

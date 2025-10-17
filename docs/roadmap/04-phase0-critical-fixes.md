@@ -1,6 +1,6 @@
-# :zap: Phase 0.1: Critical Fixes
+# :zap: Phase 1.1: Critical Fixes
 
-**Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Phase 0 Overview](03-phase0-overview.md) | [Next: Configuration Refactoring :arrow_right:](05-phase0-conf-refact.md)
+**Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Phase 1 Overview](03-phase0-overview.md) | [Next: Configuration Refactoring :arrow_right:](05-phase0-conf-refact.md)
 
 ---
 
@@ -19,6 +19,8 @@ The GitHub API imposes a 5000 requests/hour limit per installation for authentic
 - **Service Interruptions**: Operations fail abruptly when the rate limit is exceeded.
 - **Delayed Responses**: Events are not processed promptly, causing backlogs.
 - **Degraded User Experience**: Unreliable bot behavior due to frequent API failures.
+
+**Related Issues**: [#289](docs/issues/roadmap/detailed/issue-289-ci-retry-backoff.md) (CI Retry Backoff Strategy), [#339](docs/issues/roadmap/detailed/issue-339-status-check-race.md) (Status Check Race Condition)
 
 ### Solution
 
@@ -69,6 +71,8 @@ The current bot implementation suffers from several error handling deficiencies 
 
 To address these, a robust error handling strategy is needed, involving custom, typed error types, consistent `Result.t` usage, structured logging, and explicit handling of asynchronous operation outcomes.
 
+**Related Issues**: [#264](docs/issues/roadmap/templates/enhancements/issue-264-better-error-messages-on-uncaught-exceptions.md) (Better error messages on uncaught exceptions), [#334](docs/issues/roadmap/detailed/issue-334-duplicate-closures.md) (Duplicate Issue Closures)
+
 ### Solution
 
 This solution introduces a `src/errors.ml` module with a `bot_error` type and typed error variants. This addresses untyped errors by providing structured types, distinguishes recoverable (e.g., `APIError`, `RateLimitError`) from fatal (e.g., `ConfigError`) errors, and, when integrated with the logging infrastructure, helps prevent silent failures and improves debugging by providing rich, structured context for each error.
@@ -110,6 +114,8 @@ Include structured context in errors:
 - No visibility into bot operations (what actions were performed, when, why)
 - No audit trail for compliance or troubleshooting
 - Rate limiting and error handling need logging to be effective
+
+**Related Issues**: [#323](docs/issues/roadmap/detailed/issue-323-secret-masking.md) (Secret Data Masking in Logging), [#280](docs/issues/roadmap/templates/enhancements/issue-280-reduce-log-verbosity-by-printing-less-output-for-git-commands.md) (Reduce log verbosity)
 
 ### Solution
 
@@ -159,4 +165,4 @@ let log level message context =
 
 ---
 
-**Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Phase 0 Overview](03-phase0-overview.md) | [Next: Configuration Refactoring :arrow_right:](05-phase0-conf-refact.md)
+**Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Phase 1 Overview](03-phase0-overview.md) | [Next: Configuration Refactoring :arrow_right:](05-phase0-conf-refact.md)

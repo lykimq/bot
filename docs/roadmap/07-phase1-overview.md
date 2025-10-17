@@ -1,4 +1,4 @@
-# :wrench: Phase 1: Modularization
+# :wrench: Phase 2: Modularization
 
 **Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Testing Infrastructure](06-phase0-testing-infra.md) | [Next: Code Structure Analysis :arrow_right:](08-phase1-code-structure-analysis.md)
 
@@ -18,7 +18,7 @@ Break down monolithic files (`bot.ml`, `actions.ml`, `helpers.ml`) into independ
 
 ## Overview
 
-Phase 1 transforms the codebase from a monolithic structure into a modular architecture:
+Phase 2 transforms the codebase from a monolithic structure into a modular architecture:
 - Extract +10 feature modules from `actions.ml` and `bot.ml`
 - Create 4 utility modules from `helpers.ml`
 - Simplify `bot.ml` to pure routing logic
@@ -29,7 +29,7 @@ Phase 1 transforms the codebase from a monolithic structure into a modular archi
 
 ## Prerequisites
 
-Before starting Phase 1, Phase 0 must be complete:
+Before starting Phase 2, Phase 1 must be complete:
 - :white_check_mark: Rate limiting in place (prevents API exhaustion during refactoring)
 - :white_check_mark: Structured errors (helps debug issues from refactoring)
 - :white_check_mark: Logging infrastructure (provides visibility during refactoring)

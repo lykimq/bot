@@ -55,6 +55,8 @@ Based on actual function analysis, here are the distinct features with their sou
 - `trace_action` - Extract and format trace information
 - Supporting types: `rocq_job_info`, `build_failure`
 
+**Related Issues**: [#335](docs/issues/roadmap/detailed/issue-335-stdlib-confusion.md) (stdlib/stdlib-flambda Confusion), [#339](docs/issues/roadmap/detailed/issue-339-status-check-race.md) (Status Check Race Condition)
+
 ---
 
 ### 2. :memo: Documentation URL Posting
@@ -105,6 +107,8 @@ Based on actual function analysis, here are the distinct features with their sou
 - `parse_github_artifact_url` - Parse artifact URLs
 - `coq_bug_minimizer_resume_ci_minimization_action` - Resume minimization
 - Supporting types: `ci_minimization_info`, `artifact_info`, `artifact_error`, `run_ci_minimization_error`, `ci_minimization_job_suggestion_info`, `ci_minimization_pr_info`, `ci_minimization_request`, `ci_minimization_suggestion_kind`, `ci_pr_minimization_suggestion`
+
+**Related Issues**: [#170](docs/issues/roadmap/templates/bug-minimizer/issue-170-ci-minimization-responses-should-allow-easy-creation-of-prs-augmenting-the-test-suite.md) (CI Minimization Responses Should Allow Easy Creation of PRs Augmenting the Test Suite), [#289](docs/issues/roadmap/detailed/issue-289-ci-retry-backoff.md) (CI Retry Backoff Strategy)
 
 ---
 
@@ -218,6 +222,8 @@ Based on actual function analysis, here are the distinct features with their sou
 - `coqbot_minimize_text_of_body` - Parse minimization commands
 - `coqbot_ci_minimize_text_of_body` - Parse CI minimization commands
 - `coqbot_resume_ci_minimize_text_of_body` - Parse resume commands
+
+**Related Issues**: [#325](docs/issues/roadmap/detailed/issue-325-rocqbot-response.md) (@rocqbot Response Support)
 
 ---
 

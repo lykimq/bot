@@ -51,11 +51,11 @@ bot/
 │   ├── bot.ml                (pure webhook routing)
 │   ├── config.ml             (extended with repository configs)
 │   ├── config.mli
-│   ├── errors.ml             (new - Phase 0)
+│   ├── errors.ml             (new - Phase 1)
 │   ├── errors.mli
-│   ├── logger.ml             (new - Phase 0)
+│   ├── logger.ml             (new - Phase 1)
 │   ├── logger.mli
-│   ├── rate_limiter.ml       (new - Phase 0)
+│   ├── rate_limiter.ml       (new - Phase 1)
 │   ├── rate_limiter.mli
 │   ├── feature_registry.ml   (new - dynamic dispatch)
 │   ├── feature_registry.mli
@@ -106,7 +106,7 @@ bot/
 - `helpers.ml` → Split into 4 utility modules
 - `helpers.mli` → Split into corresponding `.mli` files
 
-**Added** (Phase 0):
+**Added** (Phase 1):
 - `errors.ml` + `errors.mli` - Structured error types
 - `logger.ml` + `logger.mli` - Logging infrastructure
 - `rate_limiter.ml` + `rate_limiter.mli` - Rate limiting

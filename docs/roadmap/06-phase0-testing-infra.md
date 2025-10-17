@@ -1,6 +1,6 @@
-# :test_tube: Phase 0.3: Testing Infrastructure
+# :test_tube: Phase 1.3: Testing Infrastructure
 
-**Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Configuration Refactoring](05-phase0-conf-refact.md) | [Next: Phase 1 Overview :arrow_right:](07-phase1-overview.md)
+**Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Configuration Refactoring](05-phase0-conf-refact.md) | [Next: Phase 2 Overview :arrow_right:](07-phase1-overview.md)
 
 ---
 
@@ -18,6 +18,8 @@
 - Refactoring is risky without safety net
 - Edge cases aren't systematically verified
 - Contributors need complex local setup
+
+**Related Issues**: [#170](docs/issues/roadmap/templates/bug-minimizer/issue-170-ci-minimization-responses-should-allow-easy-creation-of-prs-augmenting-the-test-suite.md) (CI Minimization Responses Should Allow Easy Creation of PRs Augmenting the Test Suite)
 
 ### Solution
 
@@ -100,4 +102,4 @@ These fixtures allow tests to verify that the configuration parser correctly han
 
 ---
 
-**Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Configuration Refactoring](05-phase0-conf-refact.md) | [Next: Phase 1 Overview :arrow_right:](07-phase1-overview.md)
+**Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Configuration Refactoring](05-phase0-conf-refact.md) | [Next: Phase 2 Overview :arrow_right:](07-phase1-overview.md)

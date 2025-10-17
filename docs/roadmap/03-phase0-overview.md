@@ -1,4 +1,4 @@
-# :building_construction: Phase 0: Critical Foundations
+# :building_construction: Phase 1: Critical Foundations
 
 **Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Critical Issues](02-critical-issues.md) | [Next: Critical Fixes :arrow_right:](04-phase0-critical-fixes.md)
 
@@ -14,11 +14,11 @@
 
 ## Goal
 
-Fix immediate pain points and establish infrastructure for safe refactoring in Phase 1.
+Fix immediate pain points and establish infrastructure for safe refactoring in Phase 2.
 
 ## Overview
 
-Phase 0 focuses on critical fixes that must be in place before any major refactoring:
+Phase 1 focuses on critical fixes that must be in place before any major refactoring:
 - Rate limiting to prevent API exhaustion
 - Structured error handling for better debugging
 - Logging infrastructure for visibility and troubleshooting
@@ -38,7 +38,7 @@ These foundations are essential before modularization because:
 - **Structured errors** help debug issues introduced by changes
 - **Logging** provides visibility into bot operations and issues
 - **Configuration** enables testing without hardcoded values
-- **Testing suite** provides safety net for refactoring in Phase 1
+- **Testing suite** provides safety net for refactoring in Phase 2
 
 ---
 

@@ -1,4 +1,4 @@
-# :gear: Phase 0.2: Configuration Refactoring
+# :gear: Phase 1.2: Configuration Refactoring
 
 **Navigation:** [:house: Home](README.md) | [:arrow_left: Previous: Critical Fixes](04-phase0-critical-fixes.md) | [Next: Testing Infrastructure :arrow_right:](06-phase0-testing-infra.md)
 
@@ -20,6 +20,8 @@
 - Feature logic scattered across multiple files
 
 **Current State**: The bot already has TOML config for GitHub-GitLab mappings (`example-config.toml`), but feature-specific logic is hardcoded in `bot.ml`.
+
+**Related Issues**: [#157](docs/issues/roadmap/templates/unlabeled/issue-157-parse-webhooks-for-github-app-installations.md) (Parse Webhooks for GitHub App Installations)
 
 ### Solution
 
@@ -92,6 +94,8 @@ The current bot's configuration system, primarily managed through `src/config.ml
 
 
 3.  **Duplicate repository entries aren't robustly detected:** While the system does detect duplicate keys in `[mappings]` and `[gitlab]` sections (e.g., two entries with the same mapping name or GitLab domain) via `Hashtbl.of_alist` and `Hashtbl.of_alist_exn`, this detection results in an abrupt program crash (`Failure "Duplicate key in config."`). This is not a user-friendly approach to configuration validation; a robust system should provide clear, actionable error messages indicating the duplicate entries rather than terminating the application.
+
+**Related Issues**: [#157](docs/issues/roadmap/templates/unlabeled/issue-157-parse-webhooks-for-github-app-installations.md) (Parse Webhooks for GitHub App Installations)
 
 
 ### Solution
