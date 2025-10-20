@@ -42,17 +42,14 @@ Covered issues: [coq/bot#223](https://github.com/coq/bot/issues/223), [coq/bot#2
 - [ ] Proposed: Create `src/logger.ml` — structured logging and secret masking
   - Addresses: [coq/bot#227](https://github.com/coq/bot/issues/227) (Problem: logs lack context), [coq/bot#323](https://github.com/coq/bot/issues/323) (Problem: secrets leak in logs)
   - How it resolves: Provides a logger with levels and key-value fields (e.g., repo/url, command, pipeline/job IDs), plus centralized regex-based redaction for tokens/URLs. Replace direct prints to ensure consistent context and masking.
-  - **DoD**: All `Stdio.printf`/`Lwt_io.print*` and ad-hoc prints are routed through `logger` with redaction by default
 
 - [ ] Add verbosity reduction hooks — safe truncation and summarization
   - Addresses: [coq/bot#280](https://github.com/coq/bot/issues/280) (Problem: git output overflows log sinks)
   - How it resolves: Caps `stdout`/`stderr` size with head/tail retention and line filtering in `git_utils.execute_cmd` and `git_utils.report_status`, and emits concise summaries in `actions.trace_action` instead of full traces.
-  - **DoD**: All command outputs use capped/truncated reporting; CI comments show concise summaries by default
 
 - [ ] Log GraphQL warnings — proactive API visibility
   - Addresses: [coq/bot#275](https://github.com/coq/bot/issues/275) (Problem: GraphQL warnings not surfaced)
   - How it resolves: Parses `extensions.warnings` in `bot-components/GraphQL_query.send_graphql_query` and emits WARN-level entries via `logger` with request identifiers to highlight upstream deprecations/changes.
-
 
 # Phase 2: Infrastructure and Modularization
 
@@ -86,14 +83,13 @@ Covered issues: [coq/bot#223](https://github.com/coq/bot/issues/223), [coq/bot#2
 
 ## Modularization
 
-Objective: Split monolithic feature logic into focused modules to improve testability, change safety, and reviewer clarity — without changing behavior.
+Objective: Split monolithic feature logic into focused modules to improve testability, change safety, and reviewer clarity - without changing behavior.
 
 Scope:
 - In-scope: Extract feature modules from `src/actions.ml`, move cross-cutting helpers from `src/helpers.ml` to `src/utils/`, keep `git_utils` and `github_installations` unchanged, keep business logic identical.
-- Out of scope: New features, behavior changes, broad renaming, dependency upgrades, format-only edits.
 
 Old -> New (summary)
-- `src/actions.ml` → `src/features/*`:
+- `src/actions.ml` -> `src/features/*`:
   - CI reporting: `ci_reporting.ml` (ties to target parsing/display improvements: [coq/bot#335](https://github.com/coq/bot/issues/335))
   - Doc URLs: `doc_urls.ml`
   - Benchmarks: `benchmarks.ml`
@@ -104,7 +100,7 @@ Old -> New (summary)
   - Backport manager: `backport_manager.ml`
   - Stale PR: `stale_pr.ml` (trivial rebase detection: [coq/bot#327](https://github.com/coq/bot/issues/327))
   - Command parser: `command_parser.ml`
-- `src/helpers.ml` → `src/utils/*`:
+- `src/helpers.ml` -> `src/utils/*`:
   - Strings: `string_utils.ml` (e.g., `strip_quoted_bot_name` improvements relate to [coq/bot#194](https://github.com/coq/bot/issues/194))
   - Branch/repo: `branch_utils.ml`
   - Comments/formatting: `comment_utils.ml` (ties to message clarity issues [coq/bot#195](https://github.com/coq/bot/issues/195))
@@ -114,9 +110,8 @@ Old -> New (summary)
 Acceptance Criteria (Definition of Done)
 - `src/actions.ml` emptied/removed; all features live under `src/features/` with `.mli` interfaces.
 - `src/helpers.ml` split into `src/utils/` modules with `.mli` interfaces.
-- `src/bot.ml` contains only routing (target ≤200 lines) in the final step of this milestone or a follow-up milestone (confirm preference).
-- All builds and CI pass; behavior verified equivalent via smoke tests.
-- No unrelated formatting or renaming churn.
+- `src/bot.ml` contains only routing (target <200 lines).
+- All builds and CI pass.
 
 ### Core Infrastructure (Proposed)
 Create dynamic feature dispatch and simplify core bot logic.
