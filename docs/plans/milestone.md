@@ -27,28 +27,29 @@
 
 ## Error Handling and Logging System
 
+### Checklist
 Covered issues: [coq/bot#223](https://github.com/coq/bot/issues/223), [coq/bot#264](https://github.com/coq/bot/issues/264), [coq/bot#227](https://github.com/coq/bot/issues/227), [coq/bot#323](https://github.com/coq/bot/issues/323), [coq/bot#280](https://github.com/coq/bot/issues/280), [coq/bot#275](https://github.com/coq/bot/issues/275)
 
 **Implementation**
-- Type modernization - `result` to `Result.t`
+- [ ] Type modernization - `result` to `Result.t`
   - Addresses: [coq/bot#223](https://github.com/coq/bot/issues/223) (Problem: deprecated `result` type in interfaces)
   - How it resolves: Replace `result` with `Result.t` in MLI files and adjust call sites as needed to align with modern type usage and tooling expectations.
 
-- Proposed: Create `src/errors.ml` - structured error types and context
+- [ ] Proposed: Create `src/errors.ml` - structured error types and context
   - Addresses: [coq/bot#264](https://github.com/coq/bot/issues/264) (Problem: uncaught exceptions lack context/stack traces)
   - How it resolves: Defines `APIError`, `GitError`, `ConfigError`, `WebhookError`, `RateLimitError` with fields for operation, inputs, and optional backtraces. Call sites wrap failures using these types so errors carry actionable context.
 
-- Proposed: Create `src/logger.ml` — structured logging and secret masking
+- [ ] Proposed: Create `src/logger.ml` — structured logging and secret masking
   - Addresses: [coq/bot#227](https://github.com/coq/bot/issues/227) (Problem: logs lack context), [coq/bot#323](https://github.com/coq/bot/issues/323) (Problem: secrets leak in logs)
   - How it resolves: Provides a logger with levels and key-value fields (e.g., repo/url, command, pipeline/job IDs), plus centralized regex-based redaction for tokens/URLs. Replace direct prints to ensure consistent context and masking.
   - **DoD**: All `Stdio.printf`/`Lwt_io.print*` and ad-hoc prints are routed through `logger` with redaction by default
 
-- Add verbosity reduction hooks — safe truncation and summarization
+- [ ] Add verbosity reduction hooks — safe truncation and summarization
   - Addresses: [coq/bot#280](https://github.com/coq/bot/issues/280) (Problem: git output overflows log sinks)
   - How it resolves: Caps `stdout`/`stderr` size with head/tail retention and line filtering in `git_utils.execute_cmd` and `git_utils.report_status`, and emits concise summaries in `actions.trace_action` instead of full traces.
   - **DoD**: All command outputs use capped/truncated reporting; CI comments show concise summaries by default
 
-- Log GraphQL warnings — proactive API visibility
+- [ ] Log GraphQL warnings — proactive API visibility
   - Addresses: [coq/bot#275](https://github.com/coq/bot/issues/275) (Problem: GraphQL warnings not surfaced)
   - How it resolves: Parses `extensions.warnings` in `bot-components/GraphQL_query.send_graphql_query` and emits WARN-level entries via `logger` with request identifiers to highlight upstream deprecations/changes.
 
@@ -91,7 +92,7 @@ Scope:
 - In-scope: Extract feature modules from `src/actions.ml`, move cross-cutting helpers from `src/helpers.ml` to `src/utils/`, keep `git_utils` and `github_installations` unchanged, keep business logic identical.
 - Out of scope: New features, behavior changes, broad renaming, dependency upgrades, format-only edits.
 
-Old → New (summary)
+Old -> New (summary)
 - `src/actions.ml` → `src/features/*`:
   - CI reporting: `ci_reporting.ml` (ties to target parsing/display improvements: [coq/bot#335](https://github.com/coq/bot/issues/335))
   - Doc URLs: `doc_urls.ml`
@@ -130,19 +131,19 @@ Create dynamic feature dispatch and simplify core bot logic.
   - **Impact**: Pure webhook routing without business logic
 
 - [ ] **Text Formatting and Display Improvements**
-  - **[coq/bot#195](https://github.com/coq/bot/issues/195)**: Fix mis-pluralized job reporting text
+  - [ ] **[coq/bot#195](https://github.com/coq/bot/issues/195)**: Fix mis-pluralized job reporting text
     - **Problem**: "requested target '%s' could not be found among the jobs %s" is mis-pluralized and unclear about job types
     - **Solution**: Fix grammar in `minimize_failed_tests` function, clarify what types of jobs are being reported
     - **Impact**: Improves clarity of CI job reporting messages
     - **Effort**: Simple text replacement in error message formatting
 
-  - **[coq/bot#194](https://github.com/coq/bot/issues/194)**: Fix hidden and misleading target display
+  - [ ] **[coq/bot#194](https://github.com/coq/bot/issues/194)**: Fix hidden and misleading target display
     - **Problem**: Hidden `</code>` tag and misleading target display in CI reports
     - **Solution**: Fix HTML tag rendering in `minimize_failed_tests` function and `strip_quoted_bot_name` function
     - **Impact**: Eliminates confusing HTML artifacts and misleading target names
     - **Effort**: Fix HTML tag escaping in string formatting
 
-  - **[coq/bot#193](https://github.com/coq/bot/issues/193)**: Add indication for doubled targets
+  - [ ] **[coq/bot#193](https://github.com/coq/bot/issues/193)**: Add indication for doubled targets
     - **Problem**: No indication when a target was doubled in the request, even though it only triggers once
     - **Solution**: Add clear messaging in `minimize_failed_tests` function target processing logic
     - **Impact**: Provides transparency about target duplication behavior
