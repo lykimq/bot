@@ -14,12 +14,14 @@
   - **Solution**: Fix command text formatting in benchmark reporting functions
   - **Impact**: Corrects user-facing command display
   - **Effort**: Simple string replacement in `run_bench` or `bench_text` functions
+  - **Dependencies**: None
 
 - [ ] **[coq/bot#125](https://github.com/coq/bot/issues/125)**: JSON parsing failure on PR close webhook
   - **Problem**: Bot crashes on malformed webhook payloads with null values (e.g., missing fields on PR close), due to unguarded pattern matches and assumptions about presence
   - **Solution**: Add robust JSON parsing with null checks and error handling
   - **Impact**: Ensures reliable webhook handling
   - **Effort**: Add null checks to JSON parsing in `receive_gitlab` and `receive_github` functions
+  - **Dependencies**: None
 
 # Phase 1: Foundation Infrastructure
 
@@ -34,23 +36,28 @@ Covered issues: [coq/bot#223](https://github.com/coq/bot/issues/223), [coq/bot#2
 - [ ] Type modernization - `result` to `Result.t`
   - Addresses: [coq/bot#223](https://github.com/coq/bot/issues/223) (Problem: deprecated `result` type in interfaces)
   - How it resolves: Replace `result` with `Result.t` in MLI files and adjust call sites as needed to align with modern type usage and tooling expectations.
+  - **Dependencies**: None
 
 - [ ] Proposed: Create `src/errors.ml` - structured error types and context
   - Addresses: [coq/bot#264](https://github.com/coq/bot/issues/264) (Problem: uncaught exceptions lack context/stack traces)
   - How it resolves: Defines `APIError`, `GitError`, `ConfigError`, `WebhookError`, `RateLimitError` with fields for operation, inputs, and optional backtraces. Call sites wrap failures using these types so errors carry actionable context.
     - Note: `RateLimitError` type is introduced here; it will be emitted/handled by `src/rate_limiter.ml` in Phase 2.
+  - **Dependencies**: None
 
 - [ ] Proposed: Create `src/logger.ml` — structured logging and secret masking
   - Addresses: [coq/bot#227](https://github.com/coq/bot/issues/227) (Problem: logs lack context), [coq/bot#323](https://github.com/coq/bot/issues/323) (Problem: secrets leak in logs)
   - How it resolves: Provides a logger with levels and key-value fields (e.g., repo/url, command, pipeline/job IDs), plus centralized regex-based redaction for tokens/URLs. Replace direct prints to ensure consistent context and masking.
+  - **Dependencies**: `src/errors.ml`
 
 - [ ] Add verbosity reduction hooks — safe truncation and summarization
   - Addresses: [coq/bot#280](https://github.com/coq/bot/issues/280) (Problem: git output overflows log sinks)
   - How it resolves: Caps `stdout`/`stderr` size with head/tail retention and line filtering in `git_utils.execute_cmd` and `git_utils.report_status`, and emits concise summaries in `actions.trace_action` instead of full traces.
+  - **Dependencies**: `src/logger.ml`
 
 - [ ] Log GraphQL warnings — proactive API visibility
   - Addresses: [coq/bot#275](https://github.com/coq/bot/issues/275) (Problem: GraphQL warnings not surfaced)
   - How it resolves: Parses `extensions.warnings` in `bot-components/GraphQL_query.send_graphql_query` and emits WARN-level entries via `logger` with request identifiers to highlight upstream deprecations/changes.
+  - **Dependencies**: `src/logger.ml`
 
 # Phase 2: Infrastructure and Modularization
 
@@ -63,6 +70,7 @@ Covered issues: [coq/bot#223](https://github.com/coq/bot/issues/223), [coq/bot#2
   - **Solution**: Implement `X-RateLimit-Remaining` and `X-RateLimit-Reset` header monitoring
   - **Features**: Exponential backoff (1s initial, 2x multiplier, 60s max, +/-25% jitter), proactive waiting (<100 requests)
   - **Impact**: Prevents service interruptions and API exhaustion
+  - **Dependencies**: `src/errors.ml` (for RateLimitError type)
 
 - [ ] **Proposed: Configuration System**
   - **Extend TOML Configuration**: Move hardcoded repository mappings to configuration
@@ -70,18 +78,21 @@ Covered issues: [coq/bot#223](https://github.com/coq/bot/issues/223), [coq/bot#2
   - **Solution**: Move all repository mappings to TOML configuration with multiple repositories, feature arrays, and feature-specific settings
   - **Impact**: Eliminates hardcoded patterns and enables configuration-driven repository management
   - **Config file**: Use the existing root-level `coqbot-config.toml`; keep `example-config.toml` as the reference template
+  - **Dependencies**: `src/errors.ml` (for ConfigError type), `src/logger.ml`
 
 - [ ] **Proposed: Testing Infrastructure**
   - **Setup Alcotest Framework**: Lightweight OCaml testing framework with minimal setup
   - **Create Test Directory Structure**: Organized test files and fixtures
   - **Write Unit Tests**: Test core utilities and functions
   - **Add CI Integration**: Automated testing in continuous integration
+  - **Dependencies**: None (foundational component)
 
 - [ ] **Proposed: Package Management and Distribution**
   - **[coq/bot#201](https://github.com/coq/bot/issues/201)**: Deploy as opam package
   - **Problem**: Consider deploying bot-components as opam package for better distribution
   - **Solution**: Create opam package structure and publishing workflow
   - **Impact**: Improves distribution and dependency management
+  - **Dependencies**: Testing infrastructure (for package validation)
 
 ## Modularization
 
@@ -121,11 +132,13 @@ Create dynamic feature dispatch and simplify core bot logic.
 - [ ] **Proposed: Feature Registry (`src/feature_registry.ml`)**
   - **Features**: Dynamic feature dispatch based on configuration, feature registration by name, webhook event routing, enable/disable features per repository
   - **Impact**: Configuration-driven feature routing
+  - **Dependencies**: Configuration system, extracted feature modules
 
 - [ ] **Proposed: Simplify Bot Logic (`src/bot.ml`)**
   - **Goal**: Reduce from 664 lines to <200 lines
   - **Changes**: Remove hardcoded repository patterns, remove feature-specific logic, focus only on webhook parsing and routing
   - **Impact**: Pure webhook routing without business logic
+  - **Dependencies**: Feature registry, configuration system, logger
 
 - [ ] **Text Formatting and Display Improvements**
   - [ ] **[coq/bot#195](https://github.com/coq/bot/issues/195)**: Fix mis-pluralized job reporting text
@@ -133,20 +146,92 @@ Create dynamic feature dispatch and simplify core bot logic.
     - **Solution**: Fix grammar in `minimize_failed_tests` function, clarify what types of jobs are being reported
     - **Impact**: Improves clarity of CI job reporting messages
     - **Effort**: Simple text replacement in error message formatting
+    - **Dependencies**: None
 
   - [ ] **[coq/bot#194](https://github.com/coq/bot/issues/194)**: Fix hidden and misleading target display
     - **Problem**: Hidden `</code>` tag and misleading target display in CI reports
     - **Solution**: Fix HTML tag rendering in `minimize_failed_tests` function and `strip_quoted_bot_name` function
     - **Impact**: Eliminates confusing HTML artifacts and misleading target names
     - **Effort**: Fix HTML tag escaping in string formatting
+    - **Dependencies**: None
 
   - [ ] **[coq/bot#193](https://github.com/coq/bot/issues/193)**: Add indication for doubled targets
     - **Problem**: No indication when a target was doubled in the request, even though it only triggers once
     - **Solution**: Add clear messaging in `minimize_failed_tests` function target processing logic
     - **Impact**: Provides transparency about target duplication behavior
     - **Effort**: Add duplicate detection and messaging in target request processing
+    - **Dependencies**: None
 
 ---
+
+## Dependency Graph
+
+```mermaid
+graph TD
+    %% Phase 0 - No dependencies
+    P0_250["#250: bench native=on"]
+    P0_125["#125: JSON parsing"]
+
+    %% Phase 1 - Error handling and logging
+    P1_223["#223: Type modernization"]
+    P1_264["#264: errors.ml"]
+    P1_227["#227/#323: logger.ml"] --> P1_264
+    P1_280["#280: Verbosity reduction"] --> P1_227
+    P1_275["#275: GraphQL warnings"] --> P1_227
+
+    %% Phase 2 - Infrastructure
+    P2_RL["Rate Limiter"] --> P1_264
+    P2_Config["Configuration System"] --> P1_264
+    P2_Config --> P1_227
+    P2_Testing["Testing Infrastructure"]
+    P2_Package["Package Management"] --> P2_Testing
+
+    %% Core Infrastructure
+    P2_Features["Feature Registry"] --> P2_Config
+    P2_Bot["Simplify Bot Logic"] --> P2_Features
+    P2_Bot --> P2_Config
+    P2_Bot --> P1_227
+
+    %% Text Improvements
+    P2_195["#195: Job reporting text"]
+    P2_194["#194: Target display"]
+    P2_193["#193: Doubled targets"]
+
+    %% Phase grouping
+    subgraph "Phase 0: Quick Fixes"
+        P0_250
+        P0_125
+    end
+
+    subgraph "Phase 1: Foundation"
+        P1_223
+        P1_264
+        P1_227
+        P1_280
+        P1_275
+    end
+
+    subgraph "Phase 2: Infrastructure"
+        P2_RL
+        P2_Config
+        P2_Testing
+        P2_Package
+        P2_Features
+        P2_Bot
+        P2_195
+        P2_194
+        P2_193
+    end
+
+    %% Styling
+    classDef phase0 fill:#ffcccc,stroke:#ff0000
+    classDef phase1 fill:#ccffcc,stroke:#00ff00
+    classDef phase2 fill:#ccccff,stroke:#0000ff
+
+    class P0_250,P0_125 phase0
+    class P1_223,P1_264,P1_227,P1_280,P1_275 phase1
+    class P2_RL,P2_Config,P2_Testing,P2_Package,P2_Features,P2_Bot,P2_195,P2_194,P2_193 phase2
+```
 
 ## Summary
 **Result**: Testable, maintainable, and extensible system with 11 issues resolved across 3 phases.
