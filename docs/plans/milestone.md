@@ -85,69 +85,37 @@ Covered issues: [coq/bot#223](https://github.com/coq/bot/issues/223), [coq/bot#2
 
 ## Modularization
 
-### Feature Modules (Proposed)
-Break down monolithic `actions.ml` (3223 lines) into independent feature modules.
+Objective: Split monolithic feature logic into focused modules to improve testability, change safety, and reviewer clarity — without changing behavior.
 
-- [ ] **Proposed: CI Reporting (`src/features/ci_reporting.ml`)**
-  - **Functions**: `send_status_check`, `job_failure`, `trace_action`
-  - **Includes**: Improved target parsing and display formatting ([coq/bot#335](https://github.com/coq/bot/issues/335))
-  - **Impact**: Clean separation of CI reporting logic
+Scope:
+- In-scope: Extract feature modules from `src/actions.ml`, move cross-cutting helpers from `src/helpers.ml` to `src/utils/`, keep `git_utils` and `github_installations` unchanged, keep business logic identical.
+- Out of scope: New features, behavior changes, broad renaming, dependency upgrades, format-only edits.
 
-- [ ] **Proposed: Documentation URLs (`src/features/doc_urls.ml`)**
-  - **Functions**: `send_doc_url_job`, `send_doc_url`
-  - **Impact**: Isolated documentation artifact handling
+Old → New (summary)
+- `src/actions.ml` → `src/features/*`:
+  - CI reporting: `ci_reporting.ml` (ties to target parsing/display improvements: [coq/bot#335](https://github.com/coq/bot/issues/335))
+  - Doc URLs: `doc_urls.ml`
+  - Benchmarks: `benchmarks.ml`
+  - CI minimizer: `ci_minimizer.ml` (text/target clarity and duplication messaging relate to [coq/bot#195](https://github.com/coq/bot/issues/195), [coq/bot#194](https://github.com/coq/bot/issues/194), [coq/bot#193](https://github.com/coq/bot/issues/193))
+  - Bug minimizer: `bug_minimizer.ml`
+  - Pipeline handler: `pipeline_handler.ml`
+  - Milestone sync: `milestone_sync.ml`
+  - Backport manager: `backport_manager.ml`
+  - Stale PR: `stale_pr.ml` (trivial rebase detection: [coq/bot#327](https://github.com/coq/bot/issues/327))
+  - Command parser: `command_parser.ml`
+- `src/helpers.ml` → `src/utils/*`:
+  - Strings: `string_utils.ml` (e.g., `strip_quoted_bot_name` improvements relate to [coq/bot#194](https://github.com/coq/bot/issues/194))
+  - Branch/repo: `branch_utils.ml`
+  - Comments/formatting: `comment_utils.ml` (ties to message clarity issues [coq/bot#195](https://github.com/coq/bot/issues/195))
+  - HTTP/file download: `http_utils.ml`
+- Core simplification (later step): `src/bot.ml` reduced to webhook routing.
 
-- [ ] **Proposed: Benchmark Tracking (`src/features/benchmarks.ml`)**
-  - **Functions**: `fetch_bench_results`, `bench_comment`, `run_bench`
-  - **Impact**: Rocq-specific benchmark functionality
-
-- [ ] **Proposed: CI Minimization (`src/features/ci_minimizer.ml`)**
-  - **Functions**: `run_ci_minimization`, `ci_minimization_suggest`, `minimize_failed_tests`
-  - **Impact**: Automated CI test minimization
-
-- [ ] **Proposed: Bug Minimization (`src/features/bug_minimizer.ml`)**
-  - **Functions**: `run_coq_minimizer`, `coq_bug_minimizer_results_action`
-  - **Impact**: Automated bug report minimization
-
-- [ ] **Proposed: Pipeline Handler (`src/features/pipeline_handler.ml`)**
-  - **Functions**: `pipeline_action`, `create_pipeline_summary`
-  - **Impact**: GitLab pipeline event management
-
-- [ ] **Proposed: Milestone Sync (`src/features/milestone_sync.ml`)**
-  - **Functions**: `adjust_milestone`
-  - **Impact**: Milestone synchronization between issues and PRs
-
-- [ ] **Proposed: Backport Manager (`src/features/backport_manager.ml`)**
-  - **Functions**: `project_action`, `add_to_column`, `add_remove_labels`
-  - **Impact**: Rocq Prover backport workflow management
-
-- [ ] **Proposed: Stale PR Management (`src/features/stale_pr.ml`)**
-  - **Functions**: `rocq_check_stale_pr`, `rocq_check_needs_rebase_pr`, `apply_after_label`
-  - **Includes**: Clean implementation of trivial rebase detection ([coq/bot#327](https://github.com/coq/bot/issues/327))
-  - **Impact**: Automated stale PR management
-
-- [ ] **Proposed: Command Parser (`src/features/command_parser.ml`)**
-  - **Functions**: Command parsing logic from `bot.ml`
-  - **Impact**: Isolated command processing
-
-### Utility Modules (Proposed)
-Split `helpers.ml` (185 lines) into focused utility modules.
-
-- [ ] **Proposed: String Utils (`src/utils/string_utils.ml`)**
-  - **Functions**: `string_match`, `fold_string_matches`, `trim_comments`, `strip_quoted_bot_name`, `first_line_of_string`, `remove_between`
-  - **Impact**: Clean string manipulation utilities
-
-- [ ] **Proposed: Branch Utils (`src/utils/branch_utils.ml`)**
-  - **Functions**: `pr_from_branch`, `github_repo_of_gitlab_url`, `parse_gitlab_repo_url`
-  - **Impact**: Git branch and repository utilities
-
-- [ ] **Proposed: Comment Utils (`src/utils/comment_utils.ml`)**
-  - **Functions**: `code_wrap`, comment parsing utilities, comment validation functions
-  - **Impact**: Comment processing and formatting
-
-- [ ] **Proposed: HTTP Utils (`src/utils/http_utils.ml`)**
-  - **Functions**: `download`, `download_cps`, `download_to`, `copy_stream`, HTTP request/response utilities
-  - **Impact**: HTTP operations and file downloads
+Acceptance Criteria (Definition of Done)
+- `src/actions.ml` emptied/removed; all features live under `src/features/` with `.mli` interfaces.
+- `src/helpers.ml` split into `src/utils/` modules with `.mli` interfaces.
+- `src/bot.ml` contains only routing (target ≤200 lines) in the final step of this milestone or a follow-up milestone (confirm preference).
+- All builds and CI pass; behavior verified equivalent via smoke tests.
+- No unrelated formatting or renaming churn.
 
 ### Core Infrastructure (Proposed)
 Create dynamic feature dispatch and simplify core bot logic.
