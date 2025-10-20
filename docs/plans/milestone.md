@@ -69,6 +69,7 @@ Covered issues: [coq/bot#223](https://github.com/coq/bot/issues/223), [coq/bot#2
   - **Problem**: Repository configurations are hardcoded in `bot.ml` with pattern matching, no flexibility for adding repositories
   - **Solution**: Move all repository mappings to TOML configuration with multiple repositories, feature arrays, and feature-specific settings
   - **Impact**: Eliminates hardcoded patterns and enables configuration-driven repository management
+  - **Config file**: Use the existing root-level `coqbot-config.toml`; keep `example-config.toml` as the reference template
 
 - [ ] **Proposed: Testing Infrastructure**
   - **Setup Alcotest Framework**: Lightweight OCaml testing framework with minimal setup
