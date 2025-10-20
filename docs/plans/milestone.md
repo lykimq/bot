@@ -6,7 +6,6 @@
 
 ## Overview
 **Outcome**: A testable, maintainable, and extensible bot delivered in 3 phases.
-- **Progress**: 0/11 completed
 - **Phase 0**: 2 quick fixes to improve correctness and webhook robustness
 - **Phase 1**: 6 foundation improvements (types, errors, logging, visibility)
 - **Phase 2**: 3+ infrastructure and modularization tasks (rate limiting, configuration, tests, packaging, feature routing)
