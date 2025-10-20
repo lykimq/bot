@@ -1,10 +1,15 @@
 # Bot Refactoring Milestone
 
-**Goal**: Transform the bot into a modular, testable, and maintainable system while preserving all existing functionality.
-
-**Total Issues**: 11 issues across 3 phases
+**Goal & Scope**: Transform the bot into a modular, testable, and maintainable system—covering 11 issues across 3 phases—while preserving existing functionality.
 
 ---
+
+## Overview
+**Outcome**: A testable, maintainable, and extensible bot delivered in 3 phases.
+- **Progress**: 0/11 completed
+- **Phase 0**: 2 quick fixes to improve correctness and webhook robustness
+- **Phase 1**: 6 foundation improvements (types, errors, logging, visibility)
+- **Phase 2**: 3+ infrastructure and modularization tasks (rate limiting, configuration, tests, packaging, feature routing)
 
 # Phase 0: Immediate Correctness and Webhook Robustness
 
@@ -162,87 +167,3 @@ Create dynamic feature dispatch and simplify core bot logic.
     - **Effort**: Add duplicate detection and messaging in target request processing
     - **Dependencies**: None
 
----
-
-## Dependency Graph
-
-```mermaid
-graph TD
-    %% Phase 0 - No dependencies
-    P0_250["#250: bench native=on"]
-    P0_125["#125: JSON parsing"]
-
-    %% Phase 1 - Error handling and logging
-    P1_223["#223: Type modernization"]
-    P1_264["#264: errors.ml"]
-    P1_227["#227/#323: logger.ml"] --> P1_264
-    P1_280["#280: Verbosity reduction"] --> P1_227
-    P1_275["#275: GraphQL warnings"] --> P1_227
-
-    %% Phase 2 - Infrastructure
-    P2_RL["Rate Limiter"] --> P1_264
-    P2_Config["Configuration System"] --> P1_264
-    P2_Config --> P1_227
-    P2_Testing["Testing Infrastructure"]
-    P2_Package["Package Management"] --> P2_Testing
-
-    %% Core Infrastructure
-    P2_Features["Feature Registry"] --> P2_Config
-    P2_Bot["Simplify Bot Logic"] --> P2_Features
-    P2_Bot --> P2_Config
-    P2_Bot --> P1_227
-
-    %% Text Improvements
-    P2_195["#195: Job reporting text"]
-    P2_194["#194: Target display"]
-    P2_193["#193: Doubled targets"]
-
-    %% Phase grouping
-    subgraph "Phase 0: Quick Fixes"
-        P0_250
-        P0_125
-    end
-
-    subgraph "Phase 1: Foundation"
-        P1_223
-        P1_264
-        P1_227
-        P1_280
-        P1_275
-    end
-
-    subgraph "Phase 2: Infrastructure"
-        P2_RL
-        P2_Config
-        P2_Testing
-        P2_Package
-        P2_Features
-        P2_Bot
-        P2_195
-        P2_194
-        P2_193
-    end
-
-    %% Styling
-    classDef phase0 fill:#ffcccc,stroke:#ff0000,color:black,font-weight:bold
-    classDef phase1 fill:#ccffcc,stroke:#00ff00,color:black,font-weight:bold
-    classDef phase2 fill:#ccccff,stroke:#0000ff,color:black,font-weight:bold
-    classDef default color:black
-
-    class P0_250,P0_125 phase0
-    class P1_223,P1_264,P1_227,P1_280,P1_275 phase1
-    class P2_RL,P2_Config,P2_Testing,P2_Package,P2_Features,P2_Bot,P2_195,P2_194,P2_193 phase2
-```
-
-## Summary
-**Result**: Testable, maintainable, and extensible system with 11 issues resolved across 3 phases.
-- **Phase 0**: 2 issues (quick fixes requiring minimal changes)
-- **Phase 1**: 6 issues (easy codebase improvements for type safety, logging, and error handling)
-- **Phase 2**: 3+ issues (moderate infrastructure systems and modularization)
-
-**Key Achievements**:
-- **Security**: Eliminated credential exposure and race conditions
-- **Reliability**: Robust error handling and webhook processing
-- **Infrastructure**: Rate limiting, logging, configuration, and testing systems
-- **Modularity**: Clean separation of concerns with dynamic feature dispatch
-- **Maintainability**: Focused modules enabling independent testing and development
