@@ -38,6 +38,7 @@ Covered issues: [coq/bot#223](https://github.com/coq/bot/issues/223), [coq/bot#2
 - [ ] Proposed: Create `src/errors.ml` - structured error types and context
   - Addresses: [coq/bot#264](https://github.com/coq/bot/issues/264) (Problem: uncaught exceptions lack context/stack traces)
   - How it resolves: Defines `APIError`, `GitError`, `ConfigError`, `WebhookError`, `RateLimitError` with fields for operation, inputs, and optional backtraces. Call sites wrap failures using these types so errors carry actionable context.
+    - Note: `RateLimitError` type is introduced here; it will be emitted/handled by `src/rate_limiter.ml` in Phase 2.
 
 - [ ] Proposed: Create `src/logger.ml` — structured logging and secret masking
   - Addresses: [coq/bot#227](https://github.com/coq/bot/issues/227) (Problem: logs lack context), [coq/bot#323](https://github.com/coq/bot/issues/323) (Problem: secrets leak in logs)
