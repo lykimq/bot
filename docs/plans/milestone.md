@@ -224,9 +224,10 @@ graph TD
     end
 
     %% Styling
-    classDef phase0 fill:#ffcccc,stroke:#ff0000
-    classDef phase1 fill:#ccffcc,stroke:#00ff00
-    classDef phase2 fill:#ccccff,stroke:#0000ff
+    classDef phase0 fill:#ffcccc,stroke:#ff0000,color:black,font-weight:bold
+    classDef phase1 fill:#ccffcc,stroke:#00ff00,color:black,font-weight:bold
+    classDef phase2 fill:#ccccff,stroke:#0000ff,color:black,font-weight:bold
+    classDef default color:black
 
     class P0_250,P0_125 phase0
     class P1_223,P1_264,P1_227,P1_280,P1_275 phase1
